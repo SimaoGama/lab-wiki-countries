@@ -6,19 +6,30 @@ const CountryDetails = ({ countries }) => {
   const { countryId } = useParams();
 
   useEffect(() => {
-    const country = countries.find((country) => {
-      return country.alpha3Code === countryId;
-    });
+    const foundCountry = countries.find(
+      (country) => country.alpha3Code === countryId
+    );
 
-    if (country) {
-      setCountry(country);
+    if (foundCountry) {
+      setCountry(foundCountry);
     }
   }, [countryId, countries]);
+
+  const getCountryByBorderCode = (borderCode) => {
+    const foundCountry = countries.find(
+      (country) => country.alpha3Code === borderCode
+    );
+    return foundCountry?.name?.common || '';
+  };
 
   return (
     <>
       {country && (
         <div className="col-7">
+          <img
+            src={`https://flagpedia.net/data/flags/icon/72x54/${country.alpha2Code.toLowerCase()}.png`}
+            alt="flag"
+          />
           <h1>{country.name.common}</h1>
           <table className="table">
             <thead></thead>
@@ -35,16 +46,15 @@ const CountryDetails = ({ countries }) => {
               </tr>
               <tr>
                 <td>Borders</td>
-                {
-                  // map dos borders
-                }
                 <td>
                   <ul>
-                    <li>
-                      <Link to={`/${country.alpha2Code}`}>
-                        {country.name.common}
-                      </Link>
-                    </li>
+                    {country.borders.map((border) => (
+                      <li key={border}>
+                        <Link to={`/country/${border}`}>
+                          {getCountryByBorderCode(border)}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </td>
               </tr>
