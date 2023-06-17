@@ -19,7 +19,7 @@ const CountryDetails = ({ countries }) => {
     const foundCountry = countries.find(
       (country) => country.alpha3Code === borderCode
     );
-    return foundCountry?.name?.common || '';
+    return foundCountry?.name.official || '';
   };
 
   return (
@@ -36,7 +36,11 @@ const CountryDetails = ({ countries }) => {
             <tbody>
               <tr>
                 <td style={{ width: '30%' }}>Capital</td>
-                <td>{country.capital}</td>
+                {country.capital[0] ? (
+                  <td>{country.capital[0]}</td>
+                ) : (
+                  <td>No Capital</td>
+                )}
               </tr>
               <tr>
                 <td>Area</td>
@@ -48,13 +52,17 @@ const CountryDetails = ({ countries }) => {
                 <td>Borders</td>
                 <td>
                   <ul>
-                    {country.borders.map((border) => (
-                      <li key={border}>
-                        <Link to={`/country/${border}`}>
-                          {getCountryByBorderCode(border)}
-                        </Link>
-                      </li>
-                    ))}
+                    {country.borders.length > 0 ? (
+                      country.borders.map((border) => (
+                        <li key={border}>
+                          <Link to={`/country/${border}`}>
+                            {getCountryByBorderCode(border)}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <li>No Borders</li>
+                    )}
                   </ul>
                 </td>
               </tr>
